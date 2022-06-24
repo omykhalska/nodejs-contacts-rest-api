@@ -1,18 +1,29 @@
-const mailgun = require('mailgun-js');
+const nodemailer = require('nodemailer');
 require('dotenv').config();
 
-const { MAILGUN_APIKEY, MAILGUN_DOMAIN } = process.env;
+const {META_PASSWORD} = process.env;
 
-const mg = mailgun({ apiKey: MAILGUN_APIKEY, domain: MAILGUN_DOMAIN });
+const nodemailerConfig ={
+    host: 'smtp.meta.ua',
+    port: 465,
+    secure: true,
+    auth: {
+        user: "oksana_lytvynchuk@meta.ua",
+        pass: META_PASSWORD,
+    }
+}
+
+const transporter = nodemailer.createTransport(nodemailerConfig);
 
 const sendEmail = async (data) => {
-  const email = { ...data, from: 'noreply@oksana.mailgun.org' };
-  await mg.messages().send(email, function (error, body) {
-    if (error) {
-      console.log(error);
-      throw error;
-    }
-  });
+  const email = { ...data, from: 'oksana_lytvynchuk@meta.ua' };
+  try {
+      await transporter.sendMail(email)
+      console.log('Email sent successfully');
+  }
+  catch (error) {
+      console.log(error.message);
+  }
 };
 
 module.exports = sendEmail;

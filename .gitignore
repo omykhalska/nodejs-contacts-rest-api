@@ -10,3 +10,5 @@ node_modules/
 
 # VisualStudioCode Patch
 **/.history
+
+.idea/
